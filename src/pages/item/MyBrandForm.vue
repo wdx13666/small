@@ -32,7 +32,7 @@
 
 <script>
     export default {
-        name: "my-brand-form",
+      name: "my-brand-form111",
       data() {
         return {
           valid:false, // 表单校验结果标记

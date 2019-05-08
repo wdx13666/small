@@ -43,7 +43,7 @@
           <v-btn icon @click="closeWindow"><v-icon>close</v-icon></v-btn>
         </v-toolbar>
         <!--对话框的内容，表单-->
-        <v-card-text class="px-5">
+        <v-card-text class="px-5" style="height:400px">
           <my-brand-form></my-brand-form>
         </v-card-text>
       </v-card>
@@ -61,7 +61,7 @@
   import MyBrandForm from './MyBrandForm'
 
   export default {
-    name: "myBrand",
+    name: "MyBrand",
     data() {
       return {
         totalBrands: 0, // 总条数
@@ -128,7 +128,7 @@
     mounted() {
       this.getDataFromServer() // 调用数据初始化函数
     },
-    componets: {
+    components: {
       MyBrandForm
     }
   }
