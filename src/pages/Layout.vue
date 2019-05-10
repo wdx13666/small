@@ -29,19 +29,36 @@
           v-model="item.active"
           v-for="item in items"
           :key="item.title"
-          :prepend-icon="item.action"
-          no-action
+          :prepend-icon="item.icon"
+          no-action v-if="item.parentId === 0"
         >
           <!--一级菜单 -->
-          <v-list-tile slot="activator">
+         <!-- <v-list-tile slot="activator">
             <v-list-tile-content>
               <v-list-tile-title>{{ item.title }}</v-list-tile-title>
             </v-list-tile-content>
           </v-list-tile>
-          <!-- 二级菜单 -->
+          &lt;!&ndash; 二级菜单 &ndash;&gt;
           <v-list-tile v-for="subItem in item.items" :key="subItem.title" :to="item.path + subItem.path">
             <v-list-tile-content>
               <v-list-tile-title>{{ subItem.title }}</v-list-tile-title>
+            </v-list-tile-content>
+            <v-list-tile-action>
+              <v-icon>{{ subItem.action }}</v-icon>
+            </v-list-tile-action>
+          </v-list-tile>
+        </v-list-group>
+      </v-list>-->
+
+          <v-list-tile slot="activator" >
+            <v-list-tile-content>
+              <v-list-tile-title>{{ item.resName }}</v-list-tile-title>
+            </v-list-tile-content>
+          </v-list-tile>
+          <!-- 二级菜单 -->
+          <v-list-tile  v-for="subItem in items" :key="subItem.id" :to="item.url + subItem.url" v-if="subItem.parentId === item.id">
+            <v-list-tile-content >
+              <v-list-tile-title>{{ subItem.resName }}</v-list-tile-title>
             </v-list-tile-content>
             <v-list-tile-action>
               <v-icon>{{ subItem.action }}</v-icon>
@@ -89,8 +106,8 @@
     <v-content>
       <v-breadcrumbs>
         <v-icon slot="divider">chevron_right</v-icon>
-        <v-breadcrumbs-item>{{item1}}</v-breadcrumbs-item>
-        <v-breadcrumbs-item>{{item2}}</v-breadcrumbs-item>
+        <!--<v-breadcrumbs-item>{{item1}}</v-breadcrumbs-item>
+        <v-breadcrumbs-item>{{item2}}</v-breadcrumbs-item>-->
       </v-breadcrumbs>
       <div>
         <!--定义一个路由锚点，Layout的子组件内容将在这里展示-->
@@ -109,13 +126,38 @@
         dark: false,// 是否暗黑主题
         drawer: true,// 左侧导航是否隐藏
         miniVariant: false,// 左侧导航是否收起
-        title: '乐优商城后台管理',// 顶部导航条名称,
+        title: 'X商城后台管理',// 顶部导航条名称,
+        menu: {},
         menuMap: {}
       }
     },
+    methods: {
+      getMenu(){
+        this.$http.get("/sysPermission")
+          .then(resp => {
+            console.log(resp);
+            this.$message.success("获取menu！");
+            this.menu = resp.data
+          })
+
+      }
+
+    },
+    // 渲染后执行
+    mounted() {
+      this.getMenu(); // 调用数据初始化函数
+      menu.forEach(m => {
+        const p1 = m.path.slice(1);
+        this.menuMap[p1] = {name: m.resName};
+        m.items.forEach(i => {
+          this.menuMap[p1][i.path.slice(1)] = i.title;
+        })
+      })
+
+    },
     computed: {
       items() {
-        return menus;
+        return this.menu;
       },
       item1() {
         const arr = this.$route.path.split("/");
@@ -129,13 +171,7 @@
     name: 'App',
     watch: {},
     created() {
-      menus.forEach(m => {
-        const p1 = m.path.slice(1);
-        this.menuMap[p1] = {name: m.title};
-        m.items.forEach(i => {
-          this.menuMap[p1][i.path.slice(1)] = i.title;
-        })
-      })
+
     }
   }
 </script>

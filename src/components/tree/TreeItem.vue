@@ -8,9 +8,9 @@
       </v-list-tile-avatar>
       <v-list-tile-content>
         <v-list-tile-title v-show="!beginEdit">
-          <span >{{model.name}}</span>
+          <span >{{model.resName}}</span>
         </v-list-tile-title>
-        <input v-show="beginEdit" @click.stop="" :ref="model.id" v-model="model.name"
+        <input v-show="beginEdit" @click.stop="" :ref="model.id" v-model="model.resName"
                @blur="afterEdit" @keydown.enter="afterEdit"/>
       </v-list-tile-content>
       <v-list-tile-action v-if="isEdit">
